@@ -1,9 +1,9 @@
 # Object files
-OBJS = kernel_entry.o kernel.o idt.o isr.o isrc.o irq.o irqc.o timer.o kb.o port_io.o vga.o system.o
+OBJS = kernel_entry.o kernel.o idt.o isr.o isrc.o irq.o irqc.o timer.o kb.o port_io.o vga.o system.o prompt.o
 # Files to remove during clean
-REMOVABLE = kernel_entry.o kernel.o idt.o isr.o isrc.o irq.o irqc.o timer.o kb.o port_io.o vga.o system.o full_kernel.bin empty_end.bin Socktt95.bin boot.bin
+REMOVABLE = kernel_entry.o kernel.o idt.o isr.o isrc.o irq.o irqc.o timer.o kb.o port_io.o vga.o system.o prompt.o full_kernel.bin empty_end.bin Socktt95.bin boot.bin
 # Source Files
-SRC_FILES = kernel.c idt.c isr.c irq.c kb.c port_io.c vga.c system.c boot.asm empty_end.asm isr.asm irq.asm
+SRC_FILES = kernel.c idt.c isr.c irq.c kb.c port_io.c vga.c system.c boot.asm empty_end.asm isr.asm irq.asm prompt.c
 # Compiler options
 COMPILER_OPTIONS = -ffreestanding -m32 -g -c -w
 # Linker options
@@ -24,6 +24,7 @@ all: $(SRC_FILES)
 	i386-elf-gcc $(COMPILER_OPTIONS) "port_io.c" -o "port_io.o"
 	i386-elf-gcc $(COMPILER_OPTIONS) "vga.c" -o "vga.o"
 	i386-elf-gcc $(COMPILER_OPTIONS) "system.c" -o "system.o"
+	i386-elf-gcc $(COMPILER_OPTIONS) "prompt.c" -o "prompt.o"
 	i386-elf-ld -o "full_kernel.bin" $(OBJS) $(LINKER_OPTIONS)
 	cat "boot.bin" "full_kernel.bin" "empty_end.bin" > "Socktt95.bin"
 	qemu-system-x86_64 Socktt95.bin

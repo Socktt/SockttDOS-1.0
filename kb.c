@@ -2,7 +2,7 @@
 #include "typeDef.h"
 #include "system.h"
 
-#define BUFFER_LEN 256
+#define BUFFER_LEN 256	// Length of input buffer
 
 unsigned char kbdus[128] =
 {
@@ -44,28 +44,57 @@ unsigned char kbdus[128] =
 		0,	/* All other keys are undefined */
 };
 
-char InputBuffer[BUFFER_LEN]; 					// Buffer to store input string
-uint8_t BufferIndex = 0;						// Index of string buffer
+char InputBuffer[BUFFER_LEN]; 								// Buffer to store input string
+uint8_t BufferIndex = 0;									// Index of string buffer
 
-void * callbackArrayKeyboardInput[256];			// Callback array to store function pointers to be called on input
+void * callbackArrayKeyboardInput[256];						// Callback array to store function pointers to be called on input
+uint8_t callbackArrayKeyboardInputIndex = 0;				// Index of callback array
 
-void processInputString()						// Called on press of enter key, used to process string entered and figure out what to do with it
+/*
+Called on press of enter key, used to process string entered and figure out what to do with it
+*/
+void processInputString()
 {
 	for (uint8_t i = 0; i < 256; i++)
 	{
-		if (callbackArrayKeyboardInput[i] == 0)
+		if (callbackArrayKeyboardInput[i] == 0)				// Checks if a function is on the callback array or if its just blank space
 		{
 			break;
 		}
-		// void callbackFunction() = &callbackArrayKeyboardInput[i];
+		void (*callbackFuntion) (char InputBuffer[]);		// Make blank function
+		callbackFuntion = callbackArrayKeyboardInput[i];	// Set blank function to the function pointer in the array
+		callbackFuntion(InputBuffer);						// Call the function
 	}
-	putCh(10);									// New line
-	memset(InputBuffer, 0, BUFFER_LEN);			// Clear input buffer
-	BufferIndex = 0;							// Reset buffer index
+	memset(InputBuffer, 0, BUFFER_LEN);						// Clear input buffer
+	BufferIndex = 0;										// Reset buffer index
 	return;
 }
 
-void keyboard_handler(struct regs *r)						// Keyboard handler, attached to interrupt 1
+/*
+Adds a function to the callback array for keyboard input.
+*/
+void * addFunctionToCallbackArray(void * functionPointer)
+{
+	callbackArrayKeyboardInput[callbackArrayKeyboardInputIndex] = functionPointer;
+	callbackArrayKeyboardInputIndex++;
+	return functionPointer;
+}
+
+/*
+Removes the last function from the callback array for keyboard input, functions like the pop command in assembly
+*/
+void * removeLastFuntionFromCallbackArray()
+{
+	callbackArrayKeyboardInputIndex--;
+	void * functionPointer = callbackArrayKeyboardInput[callbackArrayKeyboardInputIndex];
+	callbackArrayKeyboardInput[callbackArrayKeyboardInputIndex] = 0;
+	return functionPointer;
+}
+
+/*
+Keyboard handler, attached to interrupt 1
+*/
+void keyboard_handler(struct regs *r)
 {
 	unsigned char Scancode;									// Input Scancode
 
@@ -90,6 +119,9 @@ void keyboard_handler(struct regs *r)						// Keyboard handler, attached to inte
 	}
 }
 
+/*
+Installs the keyboard handler, attaches to interrupt 1
+*/
 void keyboard_install()
 {
 		irq_install_handler(1, keyboard_handler);

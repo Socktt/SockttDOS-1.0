@@ -17,7 +17,7 @@ void timer_handler(struct regs *r)
 
     if (timer_ticks % 18 == 0)
     {
-        print("One second has passed\n");
+        printInt(timer_ticks, 10);
     }
 }
 

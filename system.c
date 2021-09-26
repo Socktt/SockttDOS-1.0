@@ -43,3 +43,16 @@ void strcpy(char start[], char dest[], int n) // Copy str array of length n
     }
     return;
 }
+
+/*
+compare 2 strings, returns 1 if not equal, 0 if equal
+*/
+int strcmp(char a[], char b[])
+{
+    for (int i = 0; a[i] != 0 && b[i] != 0; i++)
+        if (a[i] != b[i])
+            return 1;
+    if (a[0] != b[0])
+        return 1;
+    return 0;
+}

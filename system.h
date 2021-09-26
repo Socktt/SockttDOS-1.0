@@ -1,6 +1,7 @@
 void * memset(void *dest, int c, int n);
 char* itoa(int value, char* result, int base);
 void strcpy(char start[], char dest[], int n);
+int strcmp(char a[], char b[]);
 
 struct regs
 {
@@ -14,5 +15,6 @@ void irq_install();
 void irq_install_handler(int irq, void (*handler)(struct regs *r));
 void irq_uninstall_handler(int irq);
 void timer_install();
+void timer_phase(int hz);
 void keyboard_install();
 void mouse_install();
