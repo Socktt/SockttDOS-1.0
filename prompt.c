@@ -14,11 +14,8 @@ Called in kb.c whenever the enter key is pressed. InputArray = char array of the
 */
 void parseInput(char InputArray[])
 {
-    if(!strcmp("help", InputArray))             // Compare input to 'help'
-    {
-        print("\nHELP MENU\n");
-        print("help: Displays this menu\n");
-    }
+    putCh(10);
+    print(InputArray);
     putCh(10);                                  // New line
     promptDisplayInputField();                  // Display prompt
     return;

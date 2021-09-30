@@ -11,7 +11,7 @@ extern void kernMain(){
     //timer_install();
     keyboard_install();
     __asm__ __volatile__ ("sti"); 
-
+    clearScreen();
     print("SockttDOS 1.0\n");
     promptInit();
     return;

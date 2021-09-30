@@ -6,6 +6,11 @@ uint16_t CursorPos = 0;
 
 void setCursorPosRaw(uint16_t pos) 
 {
+    if (pos > 1920)
+    {
+        clearScreen();
+        return;
+    }
     if (pos >= 0 && pos < 2000)
     {
 		outb(0x3d4, 0x0f);
