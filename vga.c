@@ -73,6 +73,17 @@ void putCh(char Letter)
             }
             CursorPos -= CursorPos % VGA_WIDTH;
             break;
+        case '\b':
+            CursorPos--;
+            if (CursorPos % VGA_WIDTH < 2)
+            {
+                CursorPos++;
+            }
+            else
+            {
+                *(VIDEO_MEM + CursorPos * 2) = ' ';
+            }
+            break;
         default:
             *(VIDEO_MEM + CursorPos * 2) = Letter;
             CursorPos++;

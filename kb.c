@@ -102,10 +102,21 @@ void keyboard_handler(struct regs *r)
 
 	if (!(Scancode & 0x80))									// Check if key pressed is a down key or if it is a key being released
 	{
-		if (kbdus[Scancode] == '\n')						// Check if new like (aka enter)
-		{
-			processInputString();							// Process the input string when enter is pressed
-		}
+        if (kbdus[Scancode] == '\b')
+        {
+            if (BufferIndex <= 0)
+            {
+            }
+            else
+            {
+                BufferIndex--;
+                InputBuffer[BufferIndex] = 0;
+            }
+        }
+        if (kbdus[Scancode] == '\n')						// Check if new like (aka enter)
+        {
+            processInputString();							// Process the input string when enter is pressed
+        }
 		else
 		{
 			putCh(kbdus[Scancode]);
